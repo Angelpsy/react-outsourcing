@@ -1,5 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Api from '../../../Api';
+import Header from '../../Header';
+import Orders from '../../Orders';
+import Loading from '../../Loading';
 
 class TradeHistoryContainer extends Component {
     constructor(props) {
@@ -31,8 +34,18 @@ class TradeHistoryContainer extends Component {
     setPairs() {
         Api.getPairs()
             .then(data => {
+                const pairs = [];
+                for (const pair in data) {
+                    if (data.hasOwnProperty(pair)) {
+                        pairs.push({
+                            id: data[pair].id,
+                            label: pair,
+                        });
+                    }
+                }
+                
                 this.setState({
-                    pairs: Object.keys(data),
+                    pairs,
                 });
             });
     }
@@ -41,13 +54,23 @@ class TradeHistoryContainer extends Component {
      * @param pair
      */
     setOrdersByPair(pair) {
-        Api.getTradeHistory24HByPair(pair)
-            .then(data => {
-                this.setState({
-                    orders: data,
-                });
-                
+        if (!pair) {
+            this.setState({
+                orders: [],
             });
+        } else {
+            this.setState({
+                isLoadingOrders: true,
+            });
+            Api.getTradeHistory24HByPair(pair)
+                .then(data => {
+                    this.setState({
+                        orders: data,
+                        isLoadingOrders: false,
+                    });
+
+                });
+        }
     }
 
     /**
@@ -71,9 +94,25 @@ class TradeHistoryContainer extends Component {
 
     render() {
         return (
-            <div>
+            <Fragment>
+                {this.state.pairs ?
+                    <Header
+                        pairs={this.state.pairs}
+                        currentPair={this.state.currentPair}
+                        onChangePair={pair => this.handlerChangePair(pair)}
+                    />
+                : null}
 
-            </div>
+                {this.state.isLoadingOrders ?
+                    <Loading />
+                    : null}
+
+                {this.state.orders.length && !this.state.isLoadingOrders ?
+                    <Orders
+                        orders={this.state.orders}
+                    />
+                    : null}
+            </Fragment>
         );
     }
 }
