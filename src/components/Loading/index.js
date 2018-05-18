@@ -1,8 +1,11 @@
 import React from 'react';
+import { Alert } from 'reactstrap';
 
 const Loading = () => {
     return(
-        <div className='b-loading'>Loading...</div>
+        <Alert color="dark" className='b-loading'>
+            Loading...
+        </Alert>
     );
 };
 

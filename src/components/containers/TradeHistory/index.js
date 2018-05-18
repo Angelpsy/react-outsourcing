@@ -1,8 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Api from '../../../Api';
 import Header from '../../Header';
 import Orders from '../../Orders';
 import Loading from '../../Loading';
+
+import {Container} from 'reactstrap';
 
 class TradeHistoryContainer extends Component {
     constructor(props) {
@@ -31,7 +33,7 @@ class TradeHistoryContainer extends Component {
         this.setPairs();
     }
     
-    setPairs() {
+    setPairs = () => {
         Api.getPairs()
             .then(data => {
                 const pairs = [];
@@ -53,7 +55,7 @@ class TradeHistoryContainer extends Component {
     /**
      * @param pair
      */
-    setOrdersByPair(pair) {
+    setOrdersByPair = (pair) => {
         if (!pair) {
             this.setState({
                 orders: [],
@@ -76,7 +78,7 @@ class TradeHistoryContainer extends Component {
     /**
      * @param pair
      */
-    setCurrentPair(pair) {
+    setCurrentPair = (pair) => {
         this.setState({
             currentPair: pair,
         })
@@ -85,21 +87,21 @@ class TradeHistoryContainer extends Component {
     /**
      * @param pair
      */
-    handlerChangePair(pair) {
+    handlerChangePair = (pair) => {
         if (this.state.currentPair === pair) return;
 
         this.setOrdersByPair(pair);
         this.setCurrentPair(pair);
-    }
+    };
 
     render() {
         return (
-            <Fragment>
+            <Container>
                 {this.state.pairs ?
                     <Header
                         pairs={this.state.pairs}
                         currentPair={this.state.currentPair}
-                        onChangePair={pair => this.handlerChangePair(pair)}
+                        onChangePair={this.handlerChangePair}
                     />
                 : null}
 
@@ -112,7 +114,7 @@ class TradeHistoryContainer extends Component {
                         orders={this.state.orders}
                     />
                     : null}
-            </Fragment>
+            </Container>
         );
     }
 }

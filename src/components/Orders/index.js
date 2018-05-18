@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Table } from 'reactstrap';
 
 class Orders extends Component {
     render() {
@@ -6,7 +7,7 @@ class Orders extends Component {
 
         return(
             <div className='b-orders'>
-                <table>
+                <Table hover>
                     <thead>
                         <tr>
                             <th>id (tradeID)</th>
@@ -32,7 +33,7 @@ class Orders extends Component {
                         </tr>
                     )}
                     </tbody>
-                </table>
+                </Table>
             </div>
         );
     }
