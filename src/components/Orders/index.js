@@ -1,9 +1,44 @@
 import React, { Component } from 'react';
-import { Table } from 'reactstrap';
+import './index.css';
+import {Table} from 'reactstrap';
+import Pagination from 'react-js-pagination';
+
+/**
+ * @constant
+ * @type {number}
+ */
+const SIZE_PAGE = 10;
 
 class Orders extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            currentPage: 1,
+        }
+    }
+
+    /**
+     * @returns {number}
+     */
+    getMaxPage() {
+        return Math.ceil(this.props.orders.length / SIZE_PAGE);
+    }
+
+    /**
+     * @param page
+     */
+    handlerChangePage = (page) => {
+        if (page > this.getMaxPage() || page < 1) return;
+
+        this.setState({
+            currentPage: page,
+        });
+    };
+
     render() {
-        const orders = this.props.orders;
+        const orders = this.props.orders
+            .slice((this.state.currentPage - 1) * SIZE_PAGE, this.state.currentPage * SIZE_PAGE);
 
         return(
             <div className='b-orders'>
@@ -19,9 +54,7 @@ class Orders extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                    {orders
-                        .slice(0, 10)
-                        .map(
+                    {orders.map(
                         order => <tr
                         key={order.tradeID}>
                             <td>{order.tradeID}</td>
@@ -34,6 +67,17 @@ class Orders extends Component {
                     )}
                     </tbody>
                 </Table>
+                <div className="b-order_pagination-wr">
+                    <Pagination
+                        activePage={this.state.currentPage}
+                        itemsCountPerPage={SIZE_PAGE}
+                        totalItemsCount={this.props.orders.length}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlerChangePage}
+                        itemClass='page-item'
+                        linkClass='page-link'
+                    />
+                </div>
             </div>
         );
     }

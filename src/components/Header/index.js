@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
     Navbar,
     NavbarBrand,
-    UncontrolledDropdown,
     Dropdown,
     DropdownToggle,
     DropdownMenu,
@@ -18,7 +17,9 @@ class Header extends Component {
         };
     }
 
-
+    /**
+     * @param pair
+     */
     handlerChangePair = (pair) => {
         this.props.onChangePair(pair);
     };
@@ -42,7 +43,7 @@ class Header extends Component {
                         <DropdownToggle caret>
                             {this.props.currentPair || 'Select Pair'}
                         </DropdownToggle>
-                        <DropdownMenu persist>
+                        <DropdownMenu>
                             {this.props.pairs.map(
                                 pair => <DropdownItem
                                     key={pair.id}
@@ -54,6 +55,6 @@ class Header extends Component {
             </Navbar>
         );
     }
-};
+}
 
 export default Header;

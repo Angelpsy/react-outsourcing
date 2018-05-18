@@ -50,7 +50,7 @@ class TradeHistoryContainer extends Component {
                     pairs,
                 });
             });
-    }
+    };
 
     /**
      * @param pair
@@ -73,7 +73,7 @@ class TradeHistoryContainer extends Component {
 
                 });
         }
-    }
+    };
 
     /**
      * @param pair
@@ -82,7 +82,7 @@ class TradeHistoryContainer extends Component {
         this.setState({
             currentPair: pair,
         })
-    }
+    };
 
     /**
      * @param pair
