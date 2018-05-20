@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './index.css';
 import {Table} from 'reactstrap';
 import Pagination from 'react-js-pagination';
@@ -85,5 +86,10 @@ class Orders extends Component {
         );
     }
 }
+
+Orders.propTypes = {
+    orders: PropTypes.array.isRequired,
+    isLoading: PropTypes.bool,
+};
 
 export default Orders;

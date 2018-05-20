@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
 
 const Loading = (props) => {
@@ -10,6 +11,10 @@ const Loading = (props) => {
             Loading...
         </Alert>
     );
+};
+
+Loading.propTypes = {
+    isLoading: PropTypes.bool,
 };
 
 export default Loading;

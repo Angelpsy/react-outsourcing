@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import {Container} from 'reactstrap';
 
 import Header from '../../Header';
@@ -54,6 +55,16 @@ class TradeHistoryContainer extends Component {
         );
     }
 }
+
+TradeHistoryContainer.propTypes = {
+    fetchPairs: PropTypes.func.isRequired,
+    changeCurrentPair: PropTypes.func.isRequired,
+    fetchOrders: PropTypes.func.isRequired,
+    pairs: PropTypes.array.isRequired,
+    currentPair: PropTypes.object.isRequired,
+    orders: PropTypes.array.isRequired,
+    isLoadingOrders: PropTypes.bool,
+};
 
 const mapStateToProps = function(store) {
     return {
