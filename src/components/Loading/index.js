@@ -1,9 +1,12 @@
 import React from 'react';
 import { Alert } from 'reactstrap';
 
-const Loading = () => {
+const Loading = (props) => {
     return(
-        <Alert color="dark" className='b-loading'>
+        <Alert
+            style={{'display': props.isLoading ? 'block' : 'none'}}
+            color="dark"
+            className='b-loading'>
             Loading...
         </Alert>
     );

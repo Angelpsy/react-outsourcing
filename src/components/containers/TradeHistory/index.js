@@ -1,122 +1,87 @@
 import React, { Component } from 'react';
-import Api from '../../../Api';
+import {connect} from 'react-redux';
+import {Container} from 'reactstrap';
+
 import Header from '../../Header';
 import Orders from '../../Orders';
 import Loading from '../../Loading';
 
-import {Container} from 'reactstrap';
+import {
+    fetchPairs as fetchPairsActionCreator,
+    changeCurrentPair as changeCurrentPairActionCreator,
+    fetchOrders as fetchOrdersActionCreator,
+} from '../../../actionCreators';
 
 class TradeHistoryContainer extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            /**
-             * @type String[]
-             */
-            pairs: [],
-            /**
-             * @type String
-             */
-            currentPair: null,
-            /**
-             * @type Object[]
-             */
-            orders: [],
-            /**
-             * @type Boolean
-             */
-            isLoadingOrders: false,
-        };
-    }
-
     componentDidMount() {
-        this.setPairs();
+        this.props.fetchPairs();
     }
-    
-    setPairs = () => {
-        Api.getPairs()
-            .then(data => {
-                const pairs = [];
-                for (const pair in data) {
-                    if (data.hasOwnProperty(pair)) {
-                        pairs.push({
-                            id: data[pair].id,
-                            label: pair,
-                        });
-                    }
-                }
-                
-                this.setState({
-                    pairs,
-                });
-            });
-    };
-
-    /**
-     * @param pair
-     */
-    setOrdersByPair = (pair) => {
-        if (!pair) {
-            this.setState({
-                orders: [],
-            });
-        } else {
-            this.setState({
-                isLoadingOrders: true,
-            });
-            Api.getTradeHistory24HByPair(pair)
-                .then(data => {
-                    this.setState({
-                        orders: data,
-                        isLoadingOrders: false,
-                    });
-
-                });
-        }
-    };
-
-    /**
-     * @param pair
-     */
-    setCurrentPair = (pair) => {
-        this.setState({
-            currentPair: pair,
-        })
-    };
 
     /**
      * @param pair
      */
     handlerChangePair = (pair) => {
-        if (this.state.currentPair === pair) return;
+        if (this.props.currentPair === pair) return;
 
-        this.setOrdersByPair(pair);
-        this.setCurrentPair(pair);
+        this.props.changeCurrentPair(pair);
+        this.props.fetchOrders(pair.label);
     };
 
     render() {
         return (
             <Container>
-                {this.state.pairs ?
-                    <Header
-                        pairs={this.state.pairs}
-                        currentPair={this.state.currentPair}
-                        onChangePair={this.handlerChangePair}
-                    />
-                : null}
+                <Header
+                    pairs={this.props.pairs}
+                    currentPair={this.props.currentPair}
+                    onChangePair={this.handlerChangePair}
+                />
+                {this.props.pairs.length > 0 &&
+                    [
+                    <Loading
+                        isLoading={this.props.isLoadingOrders}
+                        key='loadingOrders'
+                    />,
 
-                {this.state.isLoadingOrders ?
-                    <Loading />
-                    : null}
-
-                {this.state.orders.length && !this.state.isLoadingOrders ?
-                    <Orders
-                        orders={this.state.orders}
-                    />
-                    : null}
+                    this.props.orders.length > 0 &&
+                        <Orders
+                            orders={this.props.orders}
+                            isLoading={this.props.isLoadingOrders}
+                            key='orders'
+                        />
+                    ]
+                }
             </Container>
         );
     }
 }
 
-export default TradeHistoryContainer;
+const mapStateToProps = function(store) {
+    return {
+        pairs: store.pairs.items,
+        currentPair: store.pairs.currentPair,
+        orders: store.orders.items,
+        isLoadingOrders: store.orders.isLoading,
+    };
+};
+
+const mapDispatchToProps = function(dispatch) {
+    return {
+        fetchPairs() {
+            dispatch(fetchPairsActionCreator({force: false}));
+        },
+        /**
+         * @param {Object} pair
+         */
+        changeCurrentPair(pair) {
+            dispatch(changeCurrentPairActionCreator(pair));
+        },
+        /**
+         * @param {String} pairLabel
+         */
+        fetchOrders(pairLabel) {
+            dispatch(fetchOrdersActionCreator(pairLabel));
+        },
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TradeHistoryContainer);
