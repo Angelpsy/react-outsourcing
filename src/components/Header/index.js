@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {
     Navbar,
     NavbarBrand,
@@ -56,5 +57,11 @@ class Header extends Component {
         );
     }
 }
+
+Header.propTypes = {
+    onChangePair: PropTypes.func.isRequired,
+    pairs: PropTypes.array.isRequired,
+    currentPair: PropTypes.object.isRequired,
+};
 
 export default Header;
