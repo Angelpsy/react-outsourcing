@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {Container} from 'reactstrap';
+
 import Api from '../../../Api';
 import Header from '../../Header';
 import Orders from '../../Orders';
 import Loading from '../../Loading';
 
-import {Container} from 'reactstrap';
+import {fetchPairs} from '../../../actionCreators';
 
 class TradeHistoryContainer extends Component {
     constructor(props) {
@@ -30,27 +33,8 @@ class TradeHistoryContainer extends Component {
     }
 
     componentDidMount() {
-        this.setPairs();
+        this.props.fetchPairs();
     }
-    
-    setPairs = () => {
-        Api.getPairs()
-            .then(data => {
-                const pairs = [];
-                for (const pair in data) {
-                    if (data.hasOwnProperty(pair)) {
-                        pairs.push({
-                            id: data[pair].id,
-                            label: pair,
-                        });
-                    }
-                }
-                
-                this.setState({
-                    pairs,
-                });
-            });
-    };
 
     /**
      * @param pair
@@ -97,9 +81,9 @@ class TradeHistoryContainer extends Component {
     render() {
         return (
             <Container>
-                {this.state.pairs ?
+                {this.props.pairs ?
                     <Header
-                        pairs={this.state.pairs}
+                        pairs={this.props.pairs}
                         currentPair={this.state.currentPair}
                         onChangePair={this.handlerChangePair}
                     />
@@ -119,4 +103,18 @@ class TradeHistoryContainer extends Component {
     }
 }
 
-export default TradeHistoryContainer;
+const mapStateToProps = function(store) {
+    return {
+        pairs: store.pairs.items
+    };
+};
+
+const mapDispatchToProps = function(dispatch) {
+    return {
+        fetchPairs: function() {
+            dispatch(fetchPairs({force: false}));
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TradeHistoryContainer);
