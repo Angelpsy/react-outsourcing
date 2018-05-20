@@ -81,23 +81,22 @@ class TradeHistoryContainer extends Component {
     render() {
         return (
             <Container>
-                {this.props.pairs ?
+                {this.props.pairs &&
                     <Header
                         pairs={this.props.pairs}
                         currentPair={this.state.currentPair}
                         onChangePair={this.handlerChangePair}
                     />
-                : null}
+                }
 
-                {this.state.isLoadingOrders ?
-                    <Loading />
-                    : null}
+                <Loading isLoading={this.state.isLoadingOrders}/>
 
-                {this.state.orders.length && !this.state.isLoadingOrders ?
+                {this.state.orders.length > 0 &&
                     <Orders
                         orders={this.state.orders}
+                        isLoading={this.state.isLoadingOrders}
                     />
-                    : null}
+                }
             </Container>
         );
     }

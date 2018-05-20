@@ -41,7 +41,10 @@ class Orders extends Component {
             .slice((this.state.currentPage - 1) * SIZE_PAGE, this.state.currentPage * SIZE_PAGE);
 
         return(
-            <div className='b-orders'>
+            <div
+                style={{'display': this.props.isLoading ? 'none' : 'block'}}
+                className='b-orders'
+            >
                 <Table hover>
                     <thead>
                         <tr>
