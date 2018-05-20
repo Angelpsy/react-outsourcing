@@ -41,13 +41,13 @@ class Header extends Component {
                         isOpen={this.state.dropdownOpen}
                         toggle={this.toggleDropdown}>
                         <DropdownToggle caret>
-                            {this.props.currentPair || 'Select Pair'}
+                            {this.props.currentPair.label || 'Select Pair'}
                         </DropdownToggle>
                         <DropdownMenu>
                             {this.props.pairs.map(
                                 pair => <DropdownItem
                                     key={pair.id}
-                                    onClick={() => {this.handlerChangePair(pair.label)}}
+                                    onClick={() => {this.handlerChangePair(pair)}}
                                 >{pair.label}</DropdownItem>
                             )}
                         </DropdownMenu>

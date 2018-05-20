@@ -9,7 +9,6 @@ export const PAIRS_FAILURE = 'PAIRS_FAILURE';
  * @returns {Function}
  */
 export const fetchPairs = ({force=false}) => (dispatch, getState) => {
-    console.log(getState());
     if (!force && getState().pairs.items.length !== 0) return;
 
     dispatch({
@@ -42,4 +41,14 @@ export const fetchPairs = ({force=false}) => (dispatch, getState) => {
                 }
             });
         });
+};
+
+export const PAIRS_CHANGE_CURRENT = 'PAIRS_CHANGE_CURRENT';
+export const changeCurrentPair = (pair) => {
+    return {
+        type: PAIRS_CHANGE_CURRENT,
+        payload: {
+            pair,
+        }
+    }
 };

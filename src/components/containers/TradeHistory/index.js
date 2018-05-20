@@ -7,20 +7,15 @@ import Header from '../../Header';
 import Orders from '../../Orders';
 import Loading from '../../Loading';
 
-import {fetchPairs} from '../../../actionCreators';
+import {
+    fetchPairs,
+    changeCurrentPair,
+} from '../../../actionCreators';
 
 class TradeHistoryContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            /**
-             * @type String[]
-             */
-            pairs: [],
-            /**
-             * @type String
-             */
-            currentPair: null,
             /**
              * @type Object[]
              */
@@ -40,7 +35,7 @@ class TradeHistoryContainer extends Component {
      * @param pair
      */
     setOrdersByPair = (pair) => {
-        if (!pair) {
+        if (!pair || !pair.label) {
             this.setState({
                 orders: [],
             });
@@ -48,7 +43,7 @@ class TradeHistoryContainer extends Component {
             this.setState({
                 isLoadingOrders: true,
             });
-            Api.getTradeHistory24HByPair(pair)
+            Api.getTradeHistory24HByPair(pair.label)
                 .then(data => {
                     this.setState({
                         orders: data,
@@ -63,16 +58,14 @@ class TradeHistoryContainer extends Component {
      * @param pair
      */
     setCurrentPair = (pair) => {
-        this.setState({
-            currentPair: pair,
-        })
+        this.props.changeCurrentPair(pair);
     };
 
     /**
      * @param pair
      */
     handlerChangePair = (pair) => {
-        if (this.state.currentPair === pair) return;
+        if (this.props.currentPair === pair) return;
 
         this.setOrdersByPair(pair);
         this.setCurrentPair(pair);
@@ -84,7 +77,7 @@ class TradeHistoryContainer extends Component {
                 {this.props.pairs &&
                     <Header
                         pairs={this.props.pairs}
-                        currentPair={this.state.currentPair}
+                        currentPair={this.props.currentPair}
                         onChangePair={this.handlerChangePair}
                     />
                 }
@@ -104,14 +97,21 @@ class TradeHistoryContainer extends Component {
 
 const mapStateToProps = function(store) {
     return {
-        pairs: store.pairs.items
+        pairs: store.pairs.items,
+        currentPair: store.pairs.currentPair,
     };
 };
 
 const mapDispatchToProps = function(dispatch) {
     return {
-        fetchPairs: function() {
+        fetchPairs() {
             dispatch(fetchPairs({force: false}));
+        },
+        /**
+         * @param {Object} pair
+         */
+        changeCurrentPair(pair) {
+            dispatch(changeCurrentPair(pair));
         }
     }
 };
