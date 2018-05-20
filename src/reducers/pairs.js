@@ -15,7 +15,7 @@ const items = (state = [], action) => {
     }
 };
 
-const loadingStatus = (state = false, action) => {
+const isLoading = (state = false, action) => {
     switch (action.type) {
         case PAIRS_REQUEST:
             return true;
@@ -38,7 +38,7 @@ const currentPair = (state = {}, action) => {
 
 const pairs = combineReducers({
     items,
-    loadingStatus,
+    isLoading,
     currentPair,
 });
 

@@ -6,7 +6,6 @@ export const PAIRS_FAILURE = 'PAIRS_FAILURE';
 
 /**
  * @param {Boolean=} force
- * @returns {Function}
  */
 export const fetchPairs = ({force=false}) => (dispatch, getState) => {
     if (!force && getState().pairs.items.length !== 0) return;
